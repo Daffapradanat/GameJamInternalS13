@@ -10,6 +10,7 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Sources")]
     public AudioSource bgmSource;
     public AudioSource sfxSource;
+    public AudioSource footstepSource; // Dedicated source untuk footstep
 
     [Header("BGM Clips")]
     public AudioClip normalBGM;
@@ -20,6 +21,13 @@ public class AudioManager : MonoBehaviour
     public AudioClip buttonClickSFX;
     public AudioClip collectCandySFX;
     public AudioClip footstepSFX;
+
+    [Header("Audio Cooldown (Anti-Spam)")]
+    [Tooltip("Minimum jarak waktu antar jumpscare (detik)")]
+    public float jumpscareCooldown = 1f;
+
+    // Track last play time
+    private float lastJumpscareTime = -999f;
 
     private const string BGM_MUTE_KEY = "BGM_MUTE";
     private const string SFX_MUTE_KEY = "SFX_MUTE";
@@ -34,6 +42,13 @@ public class AudioManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        // Setup footstep source jika belum ada
+        if (footstepSource == null)
+        {
+            footstepSource = gameObject.AddComponent<AudioSource>();
+            footstepSource.playOnAwake = false;
+        }
     }
 
     void Start()
@@ -44,6 +59,9 @@ public class AudioManager : MonoBehaviour
 
         if (sfxSource != null)
             sfxSource.mute = PlayerPrefs.GetInt(SFX_MUTE_KEY, 0) == 1;
+
+        if (footstepSource != null)
+            footstepSource.mute = PlayerPrefs.GetInt(SFX_MUTE_KEY, 0) == 1;
 
         // Play default BGM
         if (bgmSource != null && normalBGM != null && bgmSource.clip != normalBGM)
@@ -84,7 +102,12 @@ public class AudioManager : MonoBehaviour
 
     public void PlayJumpScare()
     {
+        // Anti-spam: cek cooldown
+        if (Time.time - lastJumpscareTime < jumpscareCooldown)
+            return;
+
         PlaySFX(jumpScareSFX);
+        lastJumpscareTime = Time.time;
     }
 
     public void PlayButtonClick()
@@ -99,7 +122,24 @@ public class AudioManager : MonoBehaviour
 
     public void PlayFootstep()
     {
-        PlaySFX(footstepSFX);
+        // Cek apakah footstep masih playing
+        if (footstepSource != null && footstepSFX != null)
+        {
+            // Hanya play jika audio sebelumnya sudah selesai
+            if (!footstepSource.isPlaying)
+            {
+                footstepSource.clip = footstepSFX;
+                footstepSource.Play();
+            }
+        }
+    }
+
+    public void StopFootstep()
+    {
+        if (footstepSource != null && footstepSource.isPlaying)
+        {
+            footstepSource.Stop();
+        }
     }
 
     // === TOGGLE AUDIO ===
@@ -115,11 +155,21 @@ public class AudioManager : MonoBehaviour
 
     public void ToggleSFX()
     {
+        bool newMuteState = false;
+        
         if (sfxSource != null)
         {
             sfxSource.mute = !sfxSource.mute;
-            PlayerPrefs.SetInt(SFX_MUTE_KEY, sfxSource.mute ? 1 : 0);
-            PlayerPrefs.Save();
+            newMuteState = sfxSource.mute;
         }
+
+        // Apply ke footstep source juga
+        if (footstepSource != null)
+        {
+            footstepSource.mute = newMuteState;
+        }
+
+        PlayerPrefs.SetInt(SFX_MUTE_KEY, newMuteState ? 1 : 0);
+        PlayerPrefs.Save();
     }
 }

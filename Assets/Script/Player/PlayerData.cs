@@ -19,6 +19,10 @@ public class PlayerData : MonoBehaviour
     [Tooltip("Jumlah permen yang dibutuhkan untuk menang")]
     [SerializeField] private float goal = 5;
 
+    [Header("Tag Settings")]
+    [Tooltip("Tag objek yang bisa diambil oleh player")]
+    public string candyTag = "Candy";
+
     void Update()
     {
         DisplayTimer();
@@ -65,6 +69,28 @@ public class PlayerData : MonoBehaviour
         if (_CandyUI != null)
         {
             _CandyUI.text = $"Candy: {candy}/{goal}";
+        }
+    }
+
+       private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag(candyTag))
+        {
+            int value = 1;
+            Candy candyComponent = other.GetComponent<Candy>();
+            if (candyComponent != null)
+            {
+                value = candyComponent.candyValue;
+            }
+
+            AddCandy(value);
+
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayCollectCandy();
+            }
+
+            Destroy(other.gameObject);
         }
     }
 }
