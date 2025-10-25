@@ -9,8 +9,6 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
     [Tooltip("Apakah player bisa bergerak?")]
     public bool canMove = true;
-    [Tooltip("Suara Berjalan")]
-    public AudioClip footstepSfx;
 
     [Space]
     [Header("References")]
@@ -40,20 +38,18 @@ public class PlayerMovement : MonoBehaviour
 
     void Move()
     {
-        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        float moveX = Input.GetAxis("Horizontal");
+        float moveY = Input.GetAxis("Vertical");
+
+        if (moveX != 0 || moveY != 0)
         {
-            rb.velocity = new Vector2(Input.GetAxis("Horizontal") * speed, rb.velocity.y);
-            rb.velocity = new Vector2(rb.velocity.x, Input.GetAxis("Vertical") * speed);
+            rb.velocity = new Vector2(moveX * speed, moveY * speed);
             isMoving = true;
-            
-            if(Input.GetAxis("Horizontal") > 0)
-                direction = 1;
-            else if (Input.GetAxis("Horizontal") < 0)
-                direction = 3;
-            else if (Input.GetAxis("Vertical") > 0)
-                direction = 0;
-            else if (Input.GetAxis("Vertical") < 0)
-                direction = 2;
+
+            if (moveX > 0) direction = 1;
+            else if (moveX < 0) direction = 3;
+            else if (moveY > 0) direction = 0;
+            else if (moveY < 0) direction = 2;
         }
         else
         {
@@ -66,36 +62,35 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isMoving)
         {
- 
             if (anim != null)
             {
-                anim.SetBool("isWalking", true);    
+                anim.SetBool("isWalking", true);
                 anim.SetInteger("direction", direction);
             }
-            
+
             footstepTimer += Time.deltaTime;
             if (footstepTimer >= footstepInterval)
             {
                 PlayFootstep();
                 footstepTimer = 0f;
             }
-        } 
+        }
         else
         {
-            if(anim != null)
+            if (anim != null)
                 anim.SetBool("isWalking", false);
-            
+
             footstepTimer = 0f;
         }
-        
+
         wasMoving = isMoving;
     }
-    
+
     void PlayFootstep()
     {
-        if (AudioManager.Instance != null && footstepSfx != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.Instance.PlayFootstep(footstepSfx);
+            AudioManager.Instance.PlayFootstep();
         }
     }
 }
