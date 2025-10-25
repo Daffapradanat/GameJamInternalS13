@@ -18,10 +18,15 @@ public class PlayerMovement : MonoBehaviour
     public Animator anim;
 
     bool isMoving;
-    bool wasMoving;
     int direction = 0;
-    float footstepTimer = 0f;
-    float footstepInterval = 0.3f;
+    
+    // ===== TAMBAHAN UNTUK CONTROL LIE =====
+    [HideInInspector]
+    public Vector2 inputModifier = Vector2.one; // Multiplier untuk input (untuk invert, dll)
+    [HideInInspector]
+    public bool useCustomInput = false; // Flag apakah pakai custom input
+    [HideInInspector]
+    public Vector2 customInput = Vector2.zero; // Custom input dari ControlLie
 
     private void Awake()
     {
@@ -38,18 +43,35 @@ public class PlayerMovement : MonoBehaviour
 
     void Move()
     {
-        float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
-
-        if (moveX != 0 || moveY != 0)
+        float horizontal;
+        float vertical;
+        
+        // ===== CEK APAKAH ADA CUSTOM INPUT =====
+        if (useCustomInput)
         {
-            rb.velocity = new Vector2(moveX * speed, moveY * speed);
+            horizontal = customInput.x;
+            vertical = customInput.y;
+        }
+        else
+        {
+            horizontal = Input.GetAxis("Horizontal") * inputModifier.x;
+            vertical = Input.GetAxis("Vertical") * inputModifier.y;
+        }
+        
+        if (horizontal != 0 || vertical != 0)
+        {
+            rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+            rb.velocity = new Vector2(rb.velocity.x, vertical * speed);
             isMoving = true;
-
-            if (moveX > 0) direction = 1;
-            else if (moveX < 0) direction = 3;
-            else if (moveY > 0) direction = 0;
-            else if (moveY < 0) direction = 2;
+            
+            if(horizontal > 0)
+                direction = 1;
+            else if (horizontal < 0)
+                direction = 3;
+            else if (vertical > 0)
+                direction = 0;
+            else if (vertical < 0)
+                direction = 2;
         }
         else
         {
@@ -64,26 +86,21 @@ public class PlayerMovement : MonoBehaviour
         {
             if (anim != null)
             {
-                anim.SetBool("isWalking", true);
+                anim.SetBool("isWalking", true);    
                 anim.SetInteger("direction", direction);
             }
-
-            footstepTimer += Time.deltaTime;
-            if (footstepTimer >= footstepInterval)
-            {
-                PlayFootstep();
-                footstepTimer = 0f;
-            }
-        }
+            
+            // Play footstep (akan auto-handle jika masih playing)
+            PlayFootstep();
+        } 
         else
         {
-            if (anim != null)
+            if(anim != null)
                 anim.SetBool("isWalking", false);
-
-            footstepTimer = 0f;
+            
+            // Stop footstep saat berhenti
+            StopFootstep();
         }
-
-        wasMoving = isMoving;
     }
 
     void PlayFootstep()
@@ -91,6 +108,14 @@ public class PlayerMovement : MonoBehaviour
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayFootstep();
+        }
+    }
+
+    void StopFootstep()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.StopFootstep();
         }
     }
 }
