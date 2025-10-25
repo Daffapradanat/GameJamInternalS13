@@ -70,9 +70,14 @@ public class PlayerMovement : MonoBehaviour
             }
             if(audioSource != null && footstepSfx != null)
             {
-                audioSource.clip = footstepSfx;
-                audioSource.pitch = Random.Range(0f, 1f);
-                audioSource.Play();
+                if(audioSource.clip == null)
+                    audioSource.clip = footstepSfx;
+                if(audioSource.isPlaying)
+                {
+                    audioSource.pitch = Random.Range(0.8f, 1.2f);
+                    audioSource.Play();
+                }
+                    
             }
         } else
         {

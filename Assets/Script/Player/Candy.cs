@@ -30,8 +30,9 @@ public class Candy : MonoBehaviour
 
     void Sfx()
     {
-        audioSource.clip = sfx;
-        audioSource.pitch = Random.Range(0f, 1f);
+        if(audioSource.clip == null)
+            audioSource.clip = sfx;
+        audioSource.pitch = Random.Range(0.8f, 1.2f);
         audioSource.Play();
     }
 }
