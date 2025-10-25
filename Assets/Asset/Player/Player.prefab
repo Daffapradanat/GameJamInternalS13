@@ -95,7 +95,7 @@ Animator:
   m_GameObject: {fileID: 2182186952063093317}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 065e5b7809ebbce47ac097e3c1eb4793, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -160,6 +160,7 @@ MonoBehaviour:
   timer: 60
   candy: 0
   goal: 5
+  candyTag: Candy
 --- !u!114 &5900150535285691787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,10 +175,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   canMove: 1
-  footstepSfx: {fileID: 0}
   rb: {fileID: 0}
   anim: {fileID: 0}
-  audioSource: {fileID: 0}
+  inputModifier: {x: 1, y: 1}
+  useCustomInput: 0
+  customInput: {x: 0, y: 0}
 --- !u!61 &6544956275044036909
 BoxCollider2D:
   m_ObjectHideFlags: 0
