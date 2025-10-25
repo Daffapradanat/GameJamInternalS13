@@ -52,7 +52,6 @@ public class EnemyController : MonoBehaviour
         
         if (enemyAnimator == null) enemyAnimator = GetComponent<Animator>();
         
-        // Cari player otomatis by tag
         if (player == null)
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -68,6 +67,10 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+        // Jangan update kalau game udah over
+        if (GameManager.Instance != null && GameManager.Instance.isGameOver)
+            return;
+
         switch (currentState)
         {
             case EnemyState.PATROL:
@@ -122,7 +125,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-   public void SwitchState(EnemyState newState)
+    public void SwitchState(EnemyState newState)
     {
         currentState = newState;
 
@@ -165,7 +168,6 @@ public class EnemyController : MonoBehaviour
     {
         if (enemyAnimator == null) return;
 
-        // Set animation parameters berdasarkan state
         bool isChasing = (currentState == EnemyState.CHASE);
         bool isPatrolling = (currentState == EnemyState.PATROL);
 
@@ -180,15 +182,37 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    // Trigger detection saat enemy nyentuh player
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            OnPlayerCaught();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            OnPlayerCaught();
+        }
+    }
+
     public void OnPlayerCaught()
     {
+        if (GameManager.Instance != null && GameManager.Instance.isGameOver)
+            return;
+
         Debug.Log("GAME OVER - Player Caught!");
 
+        // Play jumpscare sound
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayJumpScare();
 
-        // Trigger game over logic disini
-        // Misal: GameManager.Instance.GameOver();
+        // Trigger game over
+        if (GameManager.Instance != null)
+            GameManager.Instance.GameOver();
     }
 }
 

@@ -43,9 +43,12 @@ public class PlayerData : MonoBehaviour
     public void AddCandy(int value)
     {
         candy += value;
+        
         if(candy >= goal)
         {
-            // Menang
+            // Menang!
+            if (GameManager.Instance != null)
+                GameManager.Instance.GameWin();
         }
     }
 
