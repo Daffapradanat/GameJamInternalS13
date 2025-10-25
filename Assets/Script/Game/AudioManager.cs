@@ -19,6 +19,10 @@ public class AudioManager : MonoBehaviour
     public AudioClip jumpScareSFX;
     public AudioClip buttonClickSFX;
     public AudioClip collectCandySFX;
+    public AudioClip footstepSFX;
+
+    private const string BGM_MUTE_KEY = "BGM_MUTE";
+    private const string SFX_MUTE_KEY = "SFX_MUTE";
 
     private void Awake()
     {
@@ -34,19 +38,22 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
+        // Load mute settings
         if (bgmSource != null)
             bgmSource.mute = PlayerPrefs.GetInt(BGM_MUTE_KEY, 0) == 1;
 
         if (sfxSource != null)
             sfxSource.mute = PlayerPrefs.GetInt(SFX_MUTE_KEY, 0) == 1;
 
+        // Play default BGM
         if (bgmSource != null && normalBGM != null && bgmSource.clip != normalBGM)
         {
             bgmSource.clip = normalBGM;
             bgmSource.loop = true;
             bgmSource.Play();
         }
-}
+    }
+
     // === SWITCH MUSIC ===
     public void PlayNormalBGM()
     {
@@ -85,10 +92,17 @@ public class AudioManager : MonoBehaviour
         PlaySFX(buttonClickSFX);
     }
 
-    private const string BGM_MUTE_KEY = "BGM_MUTE";
-    private const string SFX_MUTE_KEY = "SFX_MUTE";
+    public void PlayCollectCandy()
+    {
+        PlaySFX(collectCandySFX);
+    }
 
-    // Toggle BGM
+    public void PlayFootstep()
+    {
+        PlaySFX(footstepSFX);
+    }
+
+    // === TOGGLE AUDIO ===
     public void ToggleBGM()
     {
         if (bgmSource != null)
@@ -99,7 +113,6 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // Toggle SFX
     public void ToggleSFX()
     {
         if (sfxSource != null)
@@ -108,11 +121,5 @@ public class AudioManager : MonoBehaviour
             PlayerPrefs.SetInt(SFX_MUTE_KEY, sfxSource.mute ? 1 : 0);
             PlayerPrefs.Save();
         }
-    }
-
-    // collectCandySFX
-    public void PlayCollectCandy()
-    {
-        PlaySFX(collectCandySFX);
     }
 }

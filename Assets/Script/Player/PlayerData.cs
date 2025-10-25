@@ -19,7 +19,6 @@ public class PlayerData : MonoBehaviour
     [Tooltip("Jumlah permen yang dibutuhkan untuk menang")]
     [SerializeField] private float goal = 5;
 
-    // Update is called once per frame
     void Update()
     {
         DisplayTimer();
@@ -44,9 +43,12 @@ public class PlayerData : MonoBehaviour
     public void AddCandy(int value)
     {
         candy += value;
+        
         if(candy >= goal)
         {
-            // Menang
+            // Menang!
+            if (GameManager.Instance != null)
+                GameManager.Instance.GameWin();
         }
     }
 

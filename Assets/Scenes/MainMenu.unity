@@ -2825,9 +2825,25 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 994223061307765666, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
+      propertyPath: tenseBGM
+      value: 
+      objectReference: {fileID: 8300000, guid: 6657dc93a1e8317418567f035db6aad8, type: 3}
+    - target: {fileID: 994223061307765666, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
+      propertyPath: normalBGM
+      value: 
+      objectReference: {fileID: 8300000, guid: 222677fcf0fd9ff4b816b92468bd32f8, type: 3}
+    - target: {fileID: 994223061307765666, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
+      propertyPath: jumpScareSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 83f0f3d67cb7a1446bd03454a5015d17, type: 3}
+    - target: {fileID: 994223061307765666, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
       propertyPath: buttonClickSFX
       value: 
-      objectReference: {fileID: 8300000, guid: 5febe2a953b7c6543a94e572187f6569, type: 3}
+      objectReference: {fileID: 8300000, guid: 092e9ab8b40e13d4cabd33928c74bf57, type: 3}
+    - target: {fileID: 994223061307765666, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
+      propertyPath: collectCandySFX
+      value: 
+      objectReference: {fileID: 8300000, guid: b6315480d70693541935e73756cfb751, type: 3}
     - target: {fileID: 3775929408070035295, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
       propertyPath: m_Name
       value: AudioManager

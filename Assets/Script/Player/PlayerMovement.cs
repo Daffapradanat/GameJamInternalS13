@@ -9,8 +9,6 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
     [Tooltip("Apakah player bisa bergerak?")]
     public bool canMove = true;
-    [Tooltip("Suara Berjalan")]
-    public AudioClip footstepSfx;
 
     [Space]
     [Header("References")]
@@ -18,18 +16,18 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody2D rb;
     [Tooltip("Animator player")]
     public Animator anim;
-    [Tooltip("AudioSource player")]
-    public AudioSource audioSource;
 
     bool isMoving;
+    bool wasMoving;
     int direction = 0;
+    float footstepTimer = 0f;
+    float footstepInterval = 0.3f;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (canMove)
@@ -40,49 +38,59 @@ public class PlayerMovement : MonoBehaviour
 
     void Move()
     {
-        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        float moveX = Input.GetAxis("Horizontal");
+        float moveY = Input.GetAxis("Vertical");
+
+        if (moveX != 0 || moveY != 0)
         {
-            rb.velocity = new Vector2(Input.GetAxis("Horizontal") * speed, rb.velocity.y);
-            rb.velocity = new Vector2(rb.velocity.x, Input.GetAxis("Vertical") * speed);
+            rb.velocity = new Vector2(moveX * speed, moveY * speed);
             isMoving = true;
-            if(Input.GetAxis("Horizontal") > 0)
-                direction = 1; // kanan
-            else if (Input.GetAxis("Horizontal") < 0)
-                direction = 3; // kiri
-            else if (Input.GetAxis("Vertical") > 0)
-                direction = 0; // atas
-            else if (Input.GetAxis("Vertical") < 0)
-                direction = 2; // bawah
+
+            if (moveX > 0) direction = 1;
+            else if (moveX < 0) direction = 3;
+            else if (moveY > 0) direction = 0;
+            else if (moveY < 0) direction = 2;
         }
         else
+        {
             isMoving = false;
+            rb.velocity = Vector2.zero;
+        }
     }
 
     void Detail()
     {
         if (isMoving)
         {
-            // footstep & animasi
             if (anim != null)
             {
-                anim.SetBool("isWalking", true);    
+                anim.SetBool("isWalking", true);
                 anim.SetInteger("direction", direction);
             }
-            if(audioSource != null && footstepSfx != null)
+
+            footstepTimer += Time.deltaTime;
+            if (footstepTimer >= footstepInterval)
             {
-                if(audioSource.clip == null)
-                    audioSource.clip = footstepSfx;
-                if(audioSource.isPlaying)
-                {
-                    audioSource.pitch = Random.Range(0.8f, 1.2f);
-                    audioSource.Play();
-                }
-                    
+                PlayFootstep();
+                footstepTimer = 0f;
             }
-        } else
+        }
+        else
         {
-            if(anim != null)
+            if (anim != null)
                 anim.SetBool("isWalking", false);
+
+            footstepTimer = 0f;
+        }
+
+        wasMoving = isMoving;
+    }
+
+    void PlayFootstep()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayFootstep();
         }
     }
 }
