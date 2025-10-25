@@ -2786,11 +2786,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 653093942764933668, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 357.97086
+      value: 393
       objectReference: {fileID: 0}
     - target: {fileID: 653093942764933668, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 342.05588
+      value: 181
       objectReference: {fileID: 0}
     - target: {fileID: 653093942764933668, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2831,7 +2831,7 @@ PrefabInstance:
     - target: {fileID: 994223061307765666, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
       propertyPath: normalBGM
       value: 
-      objectReference: {fileID: 8300000, guid: 222677fcf0fd9ff4b816b92468bd32f8, type: 3}
+      objectReference: {fileID: 8300000, guid: 318c8be645b92694a968de6d881e09cb, type: 3}
     - target: {fileID: 994223061307765666, guid: 6c716e9fb5317aa4b93f90be4b4c6ccd, type: 3}
       propertyPath: jumpScareSFX
       value: 

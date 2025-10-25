@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,11 +10,9 @@ public class GameManager : MonoBehaviour
     public bool isGameOver = false;
     public bool isGameWon = false;
 
-    [Header("UI Panels")]
-    [Tooltip("Panel yang muncul saat kalah")]
-    public GameObject gameOverPanel;
-    [Tooltip("Panel yang muncul saat menang")]
-    public GameObject gameWinPanel;
+    [Header("UI Manager")]
+    [Tooltip("Reference ke GameUIManager")]
+    public UiManager uiManager;
 
     [Header("Player Reference")]
     [Tooltip("Reference ke PlayerMovement untuk disable movement")]
@@ -34,11 +31,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
-
-        if (gameWinPanel != null)
-            gameWinPanel.SetActive(false);
+        if (uiManager == null)
+            uiManager = FindObjectOfType<UiManager>();
 
         if (playerMovement == null)
         {
@@ -57,8 +51,8 @@ public class GameManager : MonoBehaviour
 
         FreezeGame();
 
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(true);
+        if (uiManager != null)
+            uiManager.OnGameOver();
     }
 
     public void GameWin()
@@ -71,13 +65,9 @@ public class GameManager : MonoBehaviour
 
         FreezeGame();
 
-        // Play normal BGM
-        if (AudioManager.Instance != null)
-            AudioManager.Instance.PlayNormalBGM();
-
         // Show win panel
-        if (gameWinPanel != null)
-            gameWinPanel.SetActive(true);
+        if (uiManager != null)
+            uiManager.OnGameWin();
     }
 
     private void FreezeGame()
@@ -95,23 +85,5 @@ public class GameManager : MonoBehaviour
             if (enemy.chaseScript != null)
                 enemy.chaseScript.enabled = false;
         }
-    }
-
-    public void RestartGame()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    public void LoadMainMenu()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
-    }
-
-    public void QuitGame()
-    {
-        Debug.Log("Quit Game");
-        Application.Quit();
     }
 }
