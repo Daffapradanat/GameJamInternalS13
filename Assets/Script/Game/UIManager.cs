@@ -12,20 +12,6 @@ public class UiManager : MonoBehaviour
     [Tooltip("Panel yang muncul saat menang")]
     public GameObject winPanel;
 
-    [Header("Lose Panel Buttons")]
-    [Tooltip("Button Restart di panel lose")]
-    public Button loseRestartButton;
-    [Tooltip("Button Back to Main di panel lose")]
-    public Button loseMainMenuButton;
-
-    [Header("Win Panel Buttons")]
-    [Tooltip("Button Continue di panel win")]
-    public Button winContinueButton;
-    [Tooltip("Button Restart di panel win")]
-    public Button winRestartButton;
-    [Tooltip("Button Back to Main di panel win")]
-    public Button winMainMenuButton;
-
     [Header("Scene Names")]
     [Tooltip("Nama scene main menu")]
     public string mainMenuSceneName = "MainMenu";
@@ -39,78 +25,35 @@ public class UiManager : MonoBehaviour
 
         if (winPanel != null)
             winPanel.SetActive(false);
-
-        if (loseRestartButton != null)
-            loseRestartButton.onClick.AddListener(OnLoseRestart);
-
-        if (loseMainMenuButton != null)
-            loseMainMenuButton.onClick.AddListener(OnBackToMainMenu);
-
-        if (winContinueButton != null)
-            winContinueButton.onClick.AddListener(OnWinContinue);
-
-        if (winRestartButton != null)
-            winRestartButton.onClick.AddListener(OnWinRestart);
-
-        if (winMainMenuButton != null)
-            winMainMenuButton.onClick.AddListener(OnBackToMainMenu);
     }
 
     // === SHOW PANELS ===
     public void ShowLosePanel()
     {
         if (losePanel != null)
-        {
             losePanel.SetActive(true);
-            PlayButtonSound();
-        }
     }
 
     public void ShowWinPanel()
     {
         if (winPanel != null)
-        {
             winPanel.SetActive(true);
-            PlayButtonSound();
-        }
     }
 
-    // === LOSE PANEL BUTTONS ===
-    private void OnLoseRestart()
+    // === BUTTON METHODS (dipanggil dari OnClick) ===
+    
+    // Restart current level
+    public void RestartLevel()
     {
         PlayButtonSound();
-        RestartCurrentLevel();
-    }
-
-    // === WIN PANEL BUTTONS ===
-    private void OnWinContinue()
-    {
-        PlayButtonSound();
-        LoadNextLevel();
-    }
-
-    private void OnWinRestart()
-    {
-        PlayButtonSound();
-        RestartCurrentLevel();
-    }
-
-    // === SHARED BUTTONS ===
-    private void OnBackToMainMenu()
-    {
-        PlayButtonSound();
-        LoadMainMenu();
-    }
-
-    // === SCENE LOADING ===
-    private void RestartCurrentLevel()
-    {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    private void LoadNextLevel()
+    // Continue ke level berikutnya
+    public void ContinueToNextLevel()
     {
+        PlayButtonSound();
         Time.timeScale = 1f;
         
         if (!string.IsNullOrEmpty(nextLevelSceneName))
@@ -119,7 +62,7 @@ public class UiManager : MonoBehaviour
         }
         else
         {
-            // Kalau ga ada, load level selanjutnya berdasarkan build index
+            // Load level selanjutnya berdasarkan build index
             int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
             
             if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
@@ -130,13 +73,15 @@ public class UiManager : MonoBehaviour
             {
                 // Kalau udah level terakhir, balik ke main menu
                 Debug.Log("No more levels! Going back to main menu.");
-                LoadMainMenu();
+                BackToMainMenu();
             }
         }
     }
 
-    private void LoadMainMenu()
+    // Back to main menu
+    public void BackToMainMenu()
     {
+        PlayButtonSound();
         Time.timeScale = 1f;
         
         if (!string.IsNullOrEmpty(mainMenuSceneName))
