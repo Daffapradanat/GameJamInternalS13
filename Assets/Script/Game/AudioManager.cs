@@ -20,6 +20,14 @@ public class AudioManager : MonoBehaviour
     public AudioClip buttonClickSFX;
     public AudioClip collectCandySFX;
 
+    [Header("Pitch Variation")]
+    [Tooltip("Pitch variation untuk sound effects")]
+    [Range(0f, 1f)]
+    public float pitchVariationAmount = 0.1f;
+
+    private const string BGM_MUTE_KEY = "BGM_MUTE";
+    private const string SFX_MUTE_KEY = "SFX_MUTE";
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -46,7 +54,8 @@ public class AudioManager : MonoBehaviour
             bgmSource.loop = true;
             bgmSource.Play();
         }
-}
+    }
+
     // === SWITCH MUSIC ===
     public void PlayNormalBGM()
     {
@@ -68,13 +77,33 @@ public class AudioManager : MonoBehaviour
         bgmSource.Play();
     }
 
-    // === SFX ===
+    // === CORE SFX METHODS ===
     public void PlaySFX(AudioClip clip)
     {
         if (sfxSource != null && clip != null)
             sfxSource.PlayOneShot(clip);
     }
 
+    public void PlaySFXWithPitch(AudioClip clip, float minPitch = 0.9f, float maxPitch = 1.1f)
+    {
+        if (sfxSource != null && clip != null)
+        {
+            float originalPitch = sfxSource.pitch;
+            sfxSource.pitch = Random.Range(minPitch, maxPitch);
+            sfxSource.PlayOneShot(clip);
+            
+            StartCoroutine(ResetPitchAfterDelay(clip.length, originalPitch));
+        }
+    }
+
+    private IEnumerator ResetPitchAfterDelay(float delay, float originalPitch)
+    {
+        yield return new WaitForSeconds(delay);
+        if (sfxSource != null)
+            sfxSource.pitch = originalPitch;
+    }
+
+    // === SPECIFIC GAME SOUNDS ===
     public void PlayJumpScare()
     {
         PlaySFX(jumpScareSFX);
@@ -85,10 +114,17 @@ public class AudioManager : MonoBehaviour
         PlaySFX(buttonClickSFX);
     }
 
-    private const string BGM_MUTE_KEY = "BGM_MUTE";
-    private const string SFX_MUTE_KEY = "SFX_MUTE";
+    public void PlayCollectCandy()
+    {
+        PlaySFXWithPitch(collectCandySFX, 0.8f, 1.2f);
+    }
 
-    // Toggle BGM
+    public void PlayFootstep(AudioClip footstepClip)
+    {
+        PlaySFXWithPitch(footstepClip, 0.9f, 1.1f);
+    }
+
+    // === AUDIO SETTINGS ===
     public void ToggleBGM()
     {
         if (bgmSource != null)
@@ -99,7 +135,6 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // Toggle SFX
     public void ToggleSFX()
     {
         if (sfxSource != null)
@@ -110,9 +145,13 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // collectCandySFX
-    public void PlayCollectCandy()
+    public bool IsBGMMuted()
     {
-        PlaySFX(collectCandySFX);
+        return bgmSource != null && bgmSource.mute;
+    }
+
+    public bool IsSFXMuted()
+    {
+        return sfxSource != null && sfxSource.mute;
     }
 }
