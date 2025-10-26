@@ -10,42 +10,79 @@ public class MainMenu : MonoBehaviour
     public GameObject creditsPanel;
 
     [Header("Game Scene Name")]
-    public string gameSceneName = "Game"; // ubah sesuai nama scene
+    public string gameSceneName = "Game";
 
     public void OnNewGame()
     {
-        SceneManager.LoadScene(gameSceneName);
+        if (TransitionScene.Instance != null)
+        {
+            TransitionScene.Instance.LoadSceneWithTransition(gameSceneName);
+        }
+        else
+        {
+            SceneManager.LoadScene(gameSceneName);
+        }
     }
 
     public void OnContinue()
     {
-        SceneManager.LoadScene(gameSceneName);
+        if (TransitionScene.Instance != null)
+        {
+            TransitionScene.Instance.LoadSceneWithTransition(gameSceneName);
+        }
+        else
+        {
+            SceneManager.LoadScene(gameSceneName);
+        }
     }
 
     public void OnOptions()
     {
-        optionsPanel.SetActive(true);
+        if (optionsPanel != null)
+        {
+            optionsPanel.SetActive(true);
+        }
     }
 
     public void OnCredits()
     {
-        creditsPanel.SetActive(true);
+        if (creditsPanel != null)
+        {
+            creditsPanel.SetActive(true);
+        }
     }
 
     public void OnCloseOptions()
     {
-        optionsPanel.SetActive(false);
+        if (optionsPanel != null)
+        {
+            optionsPanel.SetActive(false);
+        }
     }
 
     public void OnCloseCredits()
     {
-        creditsPanel.SetActive(false);
+        if (creditsPanel != null)
+        {
+            creditsPanel.SetActive(false);
+        }
     }
 
     public void OnExit()
     {
         Debug.Log("Quit Game");
-        Application.Quit();
-
+        
+        if (TransitionScene.Instance != null)
+        {
+            TransitionScene.Instance.QuitGameWithTransition();
+        }
+        else
+        {
+            Application.Quit();
+            
+            #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+            #endif
+        }
     }
 }
