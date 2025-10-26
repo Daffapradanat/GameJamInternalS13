@@ -366,7 +366,7 @@ GameObject:
   - component: {fileID: 8402761211185927409}
   - component: {fileID: 5034674678306013262}
   m_Layer: 5
-  m_Name: Candy
+  m_Name: Candy IMG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -540,8 +540,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -279, y: 128.9}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -277, y: 154.45}
+  m_SizeDelta: {x: -4, y: 1.1000061}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2036022360954745695
 CanvasRenderer:
