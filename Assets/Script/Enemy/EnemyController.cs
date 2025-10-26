@@ -126,7 +126,7 @@ public class EnemyController : MonoBehaviour
 
         UpdateVisualIndicator();
 
-        Debug.Log($"Enemy State: {newState}");
+        //Debug.Log($"Enemy State: {newState}");
     }
 
     private void UpdateVisualIndicator()

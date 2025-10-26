@@ -101,7 +101,7 @@ public class EnemyPatrol : MonoBehaviour
         Vector2 randomDirection = Random.insideUnitCircle * roamRadius;
         targetPosition = startPosition + randomDirection;
         
-        Debug.Log($"New patrol target: {targetPosition}");
+        //Debug.Log($"New patrol target: {targetPosition}");
     }
 
     private void OnDrawGizmosSelected()

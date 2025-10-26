@@ -175,12 +175,12 @@ public class EnemyVision : MonoBehaviour
             // Kalau ada obstacle ketabrak sebelum sampai player = terhalang
             if (hit.collider != null)
             {
-                Debug.DrawLine(transform.position, hit.point, Color.red);
+                //Debug.DrawLine(transform.position, hit.point, Color.red);
                 return false;
             }
         }
 
-        Debug.DrawLine(transform.position, player.position, Color.green);
+        //Debug.DrawLine(transform.position, player.position, Color.green);
 
         return true;
     }

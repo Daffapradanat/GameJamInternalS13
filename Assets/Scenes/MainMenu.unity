@@ -797,7 +797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   optionsPanel: {fileID: 769988421}
   creditsPanel: {fileID: 1497930700}
-  gameSceneName: SampleEnemy
+  gameSceneName: Level1
 --- !u!4 &564838000
 Transform:
   m_ObjectHideFlags: 0

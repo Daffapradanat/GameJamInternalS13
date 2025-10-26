@@ -110,7 +110,7 @@ public class EnemyChase : MonoBehaviour
 
     private void CatchPlayer()
     {
-        Debug.Log("Player Caught!");
+        //Debug.Log("Player Caught!");
         
         if (audioController != null)
         {
