@@ -60,7 +60,7 @@ public class PlayerData : MonoBehaviour
     {
         if (_TimerUI != null)
         {
-            _TimerUI.text = "Time: " + Mathf.Ceil(timer).ToString();
+            _TimerUI.text = Mathf.Ceil(timer).ToString();
         }
     }
 
@@ -68,7 +68,7 @@ public class PlayerData : MonoBehaviour
     {
         if (_CandyUI != null)
         {
-            _CandyUI.text = $"Candy: {candy}/{goal}";
+            _CandyUI.text = $"{candy}/{goal}";
         }
     }
 
