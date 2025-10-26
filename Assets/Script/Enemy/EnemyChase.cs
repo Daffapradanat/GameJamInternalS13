@@ -80,12 +80,12 @@ public class EnemyChase : MonoBehaviour
         Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
 
         // Rotate menghadap player
-        if (direction != Vector2.zero)
-        {
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }
+        // if (direction != Vector2.zero)
+        // {
+        //     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        //     Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90);
+        //     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        // }
 
         // Gerakkan enemy
         if (rb != null)

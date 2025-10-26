@@ -33,13 +33,11 @@ public class EnemyPatrol : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         startPosition = transform.position;
         
-        // Set rigidbody ke kinematic kalau belum
         if (rb != null)
         {
             rb.bodyType = RigidbodyType2D.Kinematic;
         }
 
-        // Generate target awal
         GenerateNewTarget();
     }
 
@@ -58,7 +56,6 @@ public class EnemyPatrol : MonoBehaviour
             return;
         }
 
-        // Cek apakah sudah sampai target
         float distanceToTarget = Vector2.Distance(transform.position, targetPosition);
         
         if (distanceToTarget <= reachDistance)
@@ -79,12 +76,12 @@ public class EnemyPatrol : MonoBehaviour
         Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
         
         // Rotate menghadap target (optional, tergantung sprite)
-        if (direction != Vector2.zero)
-        {
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }
+        //if (direction != Vector2.zero)
+        //{
+            //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            //Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90);
+            //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        //}
 
         // Gerakkan enemy
         if (rb != null)

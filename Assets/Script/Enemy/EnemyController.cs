@@ -36,21 +36,11 @@ public class EnemyController : MonoBehaviour
     [Tooltip("Kecepatan saat chase (harus lebih cepat!)")]
     public float chaseSpeed = 5f;
 
-    [Header("Animation")]
-    [Tooltip("Animator component untuk animasi enemy")]
-    public Animator enemyAnimator;
-    [Tooltip("Nama parameter bool di Animator untuk state chase")]
-    public string chaseAnimationParameter = "isChasing";
-    [Tooltip("Nama parameter bool di Animator untuk state patrol")]
-    public string patrolAnimationParameter = "isPatrolling";
-
     private void Start()
     {
         if (patrolScript == null) patrolScript = GetComponent<EnemyPatrol>();
         if (visionScript == null) visionScript = GetComponent<EnemyVision>();
         if (chaseScript == null) chaseScript = GetComponent<EnemyChase>();
-        
-        if (enemyAnimator == null) enemyAnimator = GetComponent<Animator>();
         
         if (player == null)
         {
@@ -58,7 +48,6 @@ public class EnemyController : MonoBehaviour
             if (playerObj != null) player = playerObj.transform;
         }
 
-        // Setup speed di script patrol dan chase
         if (patrolScript != null) patrolScript.moveSpeed = patrolSpeed;
         if (chaseScript != null) chaseScript.chaseSpeed = chaseSpeed;
 
@@ -67,7 +56,6 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        // Jangan update kalau game udah over
         if (GameManager.Instance != null && GameManager.Instance.isGameOver)
             return;
 
@@ -84,14 +72,12 @@ public class EnemyController : MonoBehaviour
 
     private void HandlePatrolState()
     {
-        // Aktifkan patrol, matikan chase
         if (patrolScript != null && !patrolScript.enabled)
             patrolScript.enabled = true;
 
         if (chaseScript != null && chaseScript.enabled)
             chaseScript.enabled = false;
 
-        // Cek apakah player masuk vision cone
         if (visionScript != null && visionScript.CanSeePlayer())
         {
             SwitchState(EnemyState.CHASE);
@@ -100,14 +86,12 @@ public class EnemyController : MonoBehaviour
 
     private void HandleChaseState()
     {
-        // Matikan patrol, aktifkan chase
         if (patrolScript != null && patrolScript.enabled)
             patrolScript.enabled = false;
 
         if (chaseScript != null && !chaseScript.enabled)
             chaseScript.enabled = true;
 
-        // Cek apakah player keluar dari vision
         if (visionScript != null && !visionScript.CanSeePlayer())
         {
             lostPlayerTimer += Time.deltaTime;
@@ -120,7 +104,6 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            // Reset timer kalau player masih terlihat
             lostPlayerTimer = 0f;
         }
     }
@@ -142,7 +125,6 @@ public class EnemyController : MonoBehaviour
         }
 
         UpdateVisualIndicator();
-        UpdateAnimation();
 
         Debug.Log($"Enemy State: {newState}");
     }
@@ -151,38 +133,17 @@ public class EnemyController : MonoBehaviour
     {
         Color targetColor = currentState == EnemyState.PATROL ? patrolColor : chaseColor;
 
-        // Update HANYA circle light
         if (circleLightRenderer != null)
         {
             circleLightRenderer.color = targetColor;
         }
 
-        // Update Light2D component kalau ada
         if (circleLightComponent != null)
         {
             circleLightComponent.color = targetColor;
         }
     }
 
-    private void UpdateAnimation()
-    {
-        if (enemyAnimator == null) return;
-
-        bool isChasing = (currentState == EnemyState.CHASE);
-        bool isPatrolling = (currentState == EnemyState.PATROL);
-
-        if (!string.IsNullOrEmpty(chaseAnimationParameter))
-        {
-            enemyAnimator.SetBool(chaseAnimationParameter, isChasing);
-        }
-
-        if (!string.IsNullOrEmpty(patrolAnimationParameter))
-        {
-            enemyAnimator.SetBool(patrolAnimationParameter, isPatrolling);
-        }
-    }
-
-    // Trigger detection saat enemy nyentuh player
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -204,13 +165,11 @@ public class EnemyController : MonoBehaviour
         if (GameManager.Instance != null && GameManager.Instance.isGameOver)
             return;
 
-        Debug.Log("GAME OVER - Player Caught!");
+        //Debug.Log("GAME OVER - Player Caught!");
 
-        // Play jumpscare sound
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayJumpScare();
 
-        // Trigger game over
         if (GameManager.Instance != null)
             GameManager.Instance.GameOver();
     }

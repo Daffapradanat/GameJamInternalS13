@@ -23,6 +23,10 @@ public class EnemyVision : MonoBehaviour
     [Tooltip("Vision TIDAK bisa tembus obstacle (recommended untuk balanced gameplay)")]
     public bool blockVisionByObstacles = true;
 
+    [Header("Vision Direction Mode")]
+    [Tooltip("Mode untuk menentukan arah vision cone")]
+    public VisionDirectionMode visionMode = VisionDirectionMode.FollowMovement;
+    
     [Header("Vision Light Objects")]
     [Tooltip("Objek spotlight untuk vision cone")]
     public GameObject visionLight;
@@ -47,6 +51,9 @@ public class EnemyVision : MonoBehaviour
 
     private Transform player;
     private bool canSeePlayer = false;
+    private Rigidbody2D rb;
+    private Vector2 lastMovementDirection = Vector2.down;
+    private EnemyAnimator enemyAnimator;
 
     private void Start()
     {
@@ -55,10 +62,16 @@ public class EnemyVision : MonoBehaviour
         {
             player = playerObj.transform;
         }
+
+        rb = GetComponent<Rigidbody2D>();
+        enemyAnimator = GetComponent<EnemyAnimator>();
     }
 
     private void Update()
     {
+        // Update direction berdasarkan movement
+        UpdateVisionDirection();
+
         if (player != null)
         {
             canSeePlayer = CheckPlayerInVisionCone();
@@ -69,11 +82,46 @@ public class EnemyVision : MonoBehaviour
         }
     }
 
+    private void UpdateVisionDirection()
+    {
+        if (visionMode == VisionDirectionMode.FollowMovement)
+        {
+            // Ambil direction dari Animator kalau ada
+            if (enemyAnimator != null)
+            {
+                Vector2 animDirection = enemyAnimator.GetCurrentDirection();
+                if (animDirection.sqrMagnitude > 0.01f)
+                {
+                    lastMovementDirection = animDirection;
+                }
+            }
+            else if (rb != null && rb.velocity.sqrMagnitude > 0.01f)
+            {
+                lastMovementDirection = rb.velocity.normalized;
+            }
+        }
+        else if (visionMode == VisionDirectionMode.AlwaysDown)
+        {
+            lastMovementDirection = Vector2.down;
+        }
+        else if (visionMode == VisionDirectionMode.FollowTransformUp)
+        {
+            lastMovementDirection = transform.up;
+        }
+    }
+
     private void UpdateVisionLight()
     {
         if (visionLightComponent != null && changeLightColorOnDetection)
         {
             visionLightComponent.color = canSeePlayer ? detectedVisionColor : normalVisionColor;
+        }
+
+        // Rotate vision light to match direction
+        if (visionLight != null && visionMode == VisionDirectionMode.FollowMovement)
+        {
+            float angle = Mathf.Atan2(lastMovementDirection.y, lastMovementDirection.x) * Mathf.Rad2Deg;
+            visionLight.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
         }
     }
 
@@ -94,7 +142,6 @@ public class EnemyVision : MonoBehaviour
 
     private bool CheckPlayerInVisionCone()
     {
-        // Hitung direction dan distance ke player
         Vector2 directionToPlayer = player.position - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
 
@@ -105,7 +152,7 @@ public class EnemyVision : MonoBehaviour
         }
 
         // Cek 2: Apakah dalam sudut cone?
-        Vector2 enemyForward = transform.up;
+        Vector2 enemyForward = lastMovementDirection;
         
         float angleToPlayer = Vector2.Angle(enemyForward, directionToPlayer);
 
@@ -135,7 +182,6 @@ public class EnemyVision : MonoBehaviour
 
         Debug.DrawLine(transform.position, player.position, Color.green);
 
-        // Player terdeteksi!
         return true;
     }
 
@@ -153,8 +199,8 @@ public class EnemyVision : MonoBehaviour
         // Posisi enemy
         Vector3 position = transform.position;
         
-        // Direction enemy (sesuaikan dengan orientasi sprite)
-        Vector3 forward = transform.up;
+        // Direction enemy
+        Vector3 forward = Application.isPlaying ? (Vector3)lastMovementDirection : Vector3.down;
         
         // Draw vision radius
         Gizmos.DrawWireSphere(position, viewDistance);
@@ -162,15 +208,12 @@ public class EnemyVision : MonoBehaviour
         // Draw vision cone
         float halfAngle = viewAngle / 2f;
         
-        // Batas kiri cone
         Vector3 leftBoundary = Quaternion.Euler(0, 0, -halfAngle) * forward * viewDistance;
         Gizmos.DrawLine(position, position + leftBoundary);
         
-        // Batas kanan cone
         Vector3 rightBoundary = Quaternion.Euler(0, 0, halfAngle) * forward * viewDistance;
         Gizmos.DrawLine(position, position + rightBoundary);
 
-        // Draw arc untuk cone (lebih smooth)
         int segments = 20;
         float angleStep = viewAngle / segments;
         Vector3 previousPoint = position + leftBoundary;
@@ -185,15 +228,30 @@ public class EnemyVision : MonoBehaviour
             previousPoint = point;
         }
 
-        // Draw line ke player kalau terdeteksi
         if (canSeePlayer && player != null)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(position, player.position);
         }
+
+        Gizmos.color = Color.cyan;
+        Vector3 arrowEnd = position + forward * (viewDistance * 0.5f);
+        Gizmos.DrawLine(position, arrowEnd);
+        Vector3 arrowLeft = Quaternion.Euler(0, 0, 20) * -forward * 0.5f;
+        Vector3 arrowRight = Quaternion.Euler(0, 0, -20) * -forward * 0.5f;
+        Gizmos.DrawLine(arrowEnd, arrowEnd + arrowLeft);
+        Gizmos.DrawLine(arrowEnd, arrowEnd + arrowRight);
     }
 
     public float GetViewDistance() => viewDistance;
     public float GetViewAngle() => viewAngle;
     public Transform GetPlayer() => player;
+    public Vector2 GetVisionDirection() => lastMovementDirection;
+}
+
+public enum VisionDirectionMode
+{
+    FollowMovement,   
+    AlwaysDown, 
+    FollowTransformUp 
 }
