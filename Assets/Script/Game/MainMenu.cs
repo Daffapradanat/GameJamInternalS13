@@ -70,7 +70,7 @@ public class MainMenu : MonoBehaviour
 
     public void OnExit()
     {
-        Debug.Log("Quit Game");
+        //Debug.Log("Quit Game");
         
         if (TransitionScene.Instance != null)
         {

@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 3052472817135714428}
   - component: {fileID: 5748198868396198911}
   - component: {fileID: 3450525166017160507}
+  - component: {fileID: 1889352525671358607}
   - component: {fileID: 4214010987897772329}
   - component: {fileID: 1708868357937477383}
   - component: {fileID: 5888952983458823302}
@@ -300,6 +301,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!95 &1889352525671358607
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6090109320466436679}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: afaedb335b898f2439fb0955724745d1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &4214010987897772329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,6 +383,7 @@ MonoBehaviour:
     m_Bits: 0
   playerTag: Player
   blockVisionByObstacles: 1
+  visionMode: 0
   visionLight: {fileID: 6624717695318742075}
   visionLightComponent: {fileID: 8524825090286704574}
   changeLightColorOnDetection: 1
@@ -400,12 +423,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6951e00a0713ab74eb30547783452fd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  rb: {fileID: 0}
-  enemyController: {fileID: 0}
-  velocityXParam: VelocityX
-  velocityYParam: VelocityY
-  isMovingParam: IsMoving
+  animator: {fileID: 1889352525671358607}
+  spriteRenderer: {fileID: 3052472817135714428}
+  rb: {fileID: 5748198868396198911}
+  enemyController: {fileID: 4214010987897772329}
+  isWalkingBackParam: IsWalkingBack
   isChasingParam: IsChasing
   movementThreshold: 0.1
 --- !u!1 &6624717695318742075

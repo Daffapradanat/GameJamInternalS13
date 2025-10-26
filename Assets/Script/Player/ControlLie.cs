@@ -71,7 +71,6 @@ public class ControlLie : MonoBehaviour
             warningUI.gameObject.SetActive(false);
         }
         
-        // Delay inisialisasi untuk prevent bug awal
         StartCoroutine(InitializeDelay());
     }
     
@@ -98,7 +97,6 @@ public class ControlLie : MonoBehaviour
         }
         else
         {
-            // Reset ke kontrol normal
             if (playerMovement != null)
             {
                 playerMovement.useCustomInput = false;
@@ -274,7 +272,7 @@ public class ControlLie : MonoBehaviour
         {
             // Chaos aktif
             warningUI.gameObject.SetActive(true);
-            warningUI.text = $"INFECTED!\n{GetChaosTypeName()}";
+            warningUI.text = $"CURSED! {GetChaosTypeName()}";
             warningUI.color = warningColor;
         }
         else

@@ -40,8 +40,6 @@ public class UiManager : MonoBehaviour
             winPanel.SetActive(true);
     }
 
-    // === BUTTON METHODS (dipanggil dari OnClick) ===
-    
     // Restart current level
     public void RestartLevel()
     {
