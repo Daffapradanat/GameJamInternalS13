@@ -309,6 +309,14 @@ PrefabInstance:
       propertyPath: m_SortingLayer
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4253728489147303259, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
+      propertyPath: _CandyUI
+      value: 
+      objectReference: {fileID: 1452665065}
+    - target: {fileID: 4253728489147303259, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
+      propertyPath: _TimerUI
+      value: 
+      objectReference: {fileID: 1452665066}
     - target: {fileID: 4441351154460038564, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
       propertyPath: m_Name
       value: Player
@@ -6092,6 +6100,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2350750971102187177, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
+      propertyPath: m_Name
+      value: Candy IMG
+      objectReference: {fileID: 0}
     - target: {fileID: 8253387688998778740, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
       propertyPath: m_Name
       value: Default UI Gameplay
@@ -6101,6 +6113,28 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
+--- !u!114 &1452665065 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 666964037357230698, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
+  m_PrefabInstance: {fileID: 1452665064}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1452665066 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3201856417252967721, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
+  m_PrefabInstance: {fileID: 1452665064}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1487498944
 GameObject:
   m_ObjectHideFlags: 0

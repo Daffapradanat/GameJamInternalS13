@@ -406,9 +406,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c131d7fa07ac8d41a57f674f77ee666, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseSpeed: 5
+  chaseSpeed: 4
   catchDistance: 1
-  rotationSpeed: 8
+  rotationSpeed: 6
   usePrediction: 1
   predictionTime: 0.3
 --- !u!114 &1250823076036089258
