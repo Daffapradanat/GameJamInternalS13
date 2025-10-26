@@ -38,7 +38,6 @@ public class ControlLie : MonoBehaviour
     [Tooltip("Reference ke PlayerData")]
     public PlayerData playerData;
     
-    // Private variables
     private float chaosTimer;
     private float lastCandyCount;
     private int currentChaosType = 0; 
@@ -144,7 +143,6 @@ public class ControlLie : MonoBehaviour
     {
         isControlChaos = true;
         
-        // Pilih tipe chaos random dari yang diaktifkan
         List<int> availableChaos = new List<int>();
         
         if (canInvertControls) availableChaos.Add(1);
@@ -216,7 +214,6 @@ public class ControlLie : MonoBehaviour
 
     Vector2 GetRandomDirection(Vector2 currentInput)
     {
-        // Update arah random setiap beberapa waktu
         randomDirectionTimer += Time.deltaTime;
         
         if (randomDirectionTimer >= randomDirectionChangeTime || lastRandomDirection == Vector2.zero)
@@ -238,16 +235,13 @@ public class ControlLie : MonoBehaviour
 
     Vector2 GetDelayedInput(Vector2 currentInput)
     {
-        // Tambahkan input ke queue
         delayedInputs.Enqueue(currentInput);
         
-        // Batasi ukuran queue
         if (delayedInputs.Count > 10)
             delayedInputs.Dequeue();
         
         inputDelayTimer += Time.deltaTime;
         
-        // Ambil delayed input
         if (inputDelayTimer >= inputDelayAmount && delayedInputs.Count > 2)
         {
             inputDelayTimer = 0f;
@@ -263,17 +257,15 @@ public class ControlLie : MonoBehaviour
         
         if (!isControlChaos && chaosTimer <= 5f && chaosTimer > 0)
         {
-            // Warning: chaos akan aktif
             warningUI.gameObject.SetActive(true);
             warningUI.text = $"COLLECT CANDY! ({Mathf.Ceil(chaosTimer)}s)";
             warningUI.color = Color.Lerp(originalWarningColor, warningColor, Mathf.PingPong(Time.time * 2, 1));
         }
         else if (isControlChaos)
         {
-            // Chaos aktif
             warningUI.gameObject.SetActive(true);
-            warningUI.text = $"CURSED! {GetChaosTypeName()}";
             warningUI.color = warningColor;
+            warningUI.text = $"<size=60%>CURSED!</size>\n<size=40%>{GetChaosTypeName()}</size>";
         }
         else
         {
@@ -293,7 +285,6 @@ public class ControlLie : MonoBehaviour
         }
     }
 
-    // Method untuk force activate chaos (untuk testing)
     public void ForceActivateChaos(int chaosType = -1)
     {
         if (chaosType >= 0 && chaosType <= 4)
@@ -304,7 +295,6 @@ public class ControlLie : MonoBehaviour
         isControlChaos = true;
     }
 
-    // Method untuk reset ke normal
     public void ResetToNormal()
     {
         isControlChaos = false;
