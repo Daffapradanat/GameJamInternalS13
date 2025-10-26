@@ -359,11 +359,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93984c16b9040084aaf23ed1030481c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
+  moveSpeed: 1
   roamRadius: 10
   reachDistance: 0.5
   waitTime: 2
-  rotationSpeed: 5
+  rotationSpeed: 2
 --- !u!114 &5888952983458823302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,11 +406,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c131d7fa07ac8d41a57f674f77ee666, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseSpeed: 4
+  chaseSpeed: 0.2
   catchDistance: 1
-  rotationSpeed: 6
+  rotationSpeed: 1
   usePrediction: 1
-  predictionTime: 0.3
+  predictionTime: 0.1
 --- !u!114 &1250823076036089258
 MonoBehaviour:
   m_ObjectHideFlags: 0
