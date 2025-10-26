@@ -6908,6 +6908,10 @@ PrefabInstance:
       propertyPath: nextLevelSceneName
       value: Level4
       objectReference: {fileID: 0}
+    - target: {fileID: 8184456344096765157, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8253387688998778740, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
       propertyPath: m_Name
       value: Default UI Gameplay
