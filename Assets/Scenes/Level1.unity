@@ -321,6 +321,10 @@ PrefabInstance:
       propertyPath: anim
       value: 
       objectReference: {fileID: 1365323043}
+    - target: {fileID: 5900150535285691787, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
+      propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6199408283751718340, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.5
@@ -555,71 +559,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2302094384081152757, guid: 463d65774de07ca4ca5cb2ee161648aa, type: 3}
   m_PrefabInstance: {fileID: 254582330}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &346313485
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 346313488}
-  - component: {fileID: 346313487}
-  - component: {fileID: 346313486}
-  m_Layer: 0
-  m_Name: Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &346313486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 346313485}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b071d813ad9e51499264c5a50e8b024, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  losePanel: {fileID: 1452665066}
-  winPanel: {fileID: 1452665065}
-  mainMenuSceneName: MainMenu
-  nextLevelSceneName: Level2
---- !u!114 &346313487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 346313485}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eded10b520145aa4f8b753653a0a771e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGameOver: 0
-  isGameWon: 0
-  uiManager: {fileID: 346313486}
-  playerMovement: {fileID: 1779032295}
---- !u!4 &346313488
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 346313485}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5959558, y: 3.0424225, z: -0.019800317}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &567624870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6162,16 +6101,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
---- !u!1 &1452665065 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8184456344096765157, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
-  m_PrefabInstance: {fileID: 1452665064}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1452665066 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4627946092890247136, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
-  m_PrefabInstance: {fileID: 1452665064}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1487498944
 GameObject:
   m_ObjectHideFlags: 0
@@ -6780,17 +6709,6 @@ Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 7572715630252295322, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
   m_PrefabInstance: {fileID: 187848455}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1779032295 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5900150535285691787, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
-  m_PrefabInstance: {fileID: 187848455}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdc27eafb3109e9459d1c8c7b9bd8254, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1779032299 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6199408283751718340, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
@@ -7401,7 +7319,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1452665064}
-  - {fileID: 346313488}
   - {fileID: 1415362869}
   - {fileID: 1917402137}
   - {fileID: 187848455}
