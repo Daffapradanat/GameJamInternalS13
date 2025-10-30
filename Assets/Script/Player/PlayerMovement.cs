@@ -20,6 +20,10 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Base Joystick - otomatis detect semua tipe")]
     public Joystick joystick;
 
+    [Header("UI Manager")]
+    [Tooltip("Reference ke UI Manager untuk cek pause state")]
+    public UiManager uiManager;
+
     private bool isMoving;
     private int direction = 0;
     
@@ -33,10 +37,25 @@ public class PlayerMovement : MonoBehaviour
         {
             joystick = FindAnyJoystick();
         }
+
+        if (uiManager == null)
+        {
+            uiManager = FindObjectOfType<UiManager>();
+        }
     }
 
     void Update()
     {
+        bool isPaused = (uiManager != null && uiManager.IsPaused());
+        
+        if (isPaused)
+        {
+            rb.velocity = Vector2.zero;
+            isMoving = false;
+            UpdateAnimation();
+            return;
+        }
+
         if (canMove)
         {
             GetInput();
