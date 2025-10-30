@@ -20,6 +20,10 @@ public class UiManager : MonoBehaviour
     [Tooltip("Nama scene level berikutnya (untuk continue)")]
     public string nextLevelSceneName = "Level2";
 
+    [Header("Joystick UI")]
+    [Tooltip("GameObject joystick UI untuk di-hide saat pause/lose/win")]
+    public GameObject joystickUI;
+
     private bool isPaused = false;
 
     private void Start()
@@ -32,6 +36,14 @@ public class UiManager : MonoBehaviour
 
         if (pausePanel != null)
             pausePanel.SetActive(false);
+
+        // Auto find joystick UI jika belum di-assign
+        if (joystickUI == null)
+        {
+            Joystick joystick = FindObjectOfType<Joystick>();
+            if (joystick != null)
+                joystickUI = joystick.gameObject;
+        }
     }
 
     private void Update()
@@ -48,13 +60,21 @@ public class UiManager : MonoBehaviour
     public void ShowLosePanel()
     {
         if (losePanel != null)
+        {
             losePanel.SetActive(true);
+            HideJoystick();
+            PlayButtonSound();
+        }
     }
 
     public void ShowWinPanel()
     {
         if (winPanel != null)
+        {
             winPanel.SetActive(true);
+            HideJoystick();
+            PlayButtonSound();
+        }
     }
 
     public void PauseGame()
@@ -64,6 +84,9 @@ public class UiManager : MonoBehaviour
             pausePanel.SetActive(true);
             Time.timeScale = 0f;
             isPaused = true;
+            
+            HideJoystick();
+            
             PlayButtonSound();
         }
     }
@@ -75,6 +98,9 @@ public class UiManager : MonoBehaviour
             pausePanel.SetActive(false);
             Time.timeScale = 1f;
             isPaused = false;
+            
+            ShowJoystick();
+            
             PlayButtonSound();
         }
     }
@@ -115,7 +141,6 @@ public class UiManager : MonoBehaviour
             }
             else
             {
-                //Debug.Log("No more levels! Going back to main menu.");
                 BackToMainMenu();
             }
         }
@@ -135,6 +160,18 @@ public class UiManager : MonoBehaviour
         {
             SceneManager.LoadScene(0);
         }
+    }
+
+    private void HideJoystick()
+    {
+        if (joystickUI != null)
+            joystickUI.SetActive(false);
+    }
+
+    private void ShowJoystick()
+    {
+        if (joystickUI != null)
+            joystickUI.SetActive(true);
     }
 
     private void PlayButtonSound()

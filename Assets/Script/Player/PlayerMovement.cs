@@ -15,14 +15,8 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody2D rb;
     [Tooltip("Animator player")]
     public Animator anim;
-    
-    [Header("Joystick")]
-    [Tooltip("Base Joystick - otomatis detect semua tipe")]
-    public Joystick joystick;
-
-    [Header("UI Manager")]
-    [Tooltip("Reference ke UI Manager untuk cek pause state")]
-    public UiManager uiManager;
+    [Tooltip("Player Joystick Component")]
+    public PlayerJoystick playerJoystick;
 
     private bool isMoving;
     private int direction = 0;
@@ -33,29 +27,14 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         
-        if (joystick == null)
+        if (playerJoystick == null)
         {
-            joystick = FindAnyJoystick();
-        }
-
-        if (uiManager == null)
-        {
-            uiManager = FindObjectOfType<UiManager>();
+            playerJoystick = GetComponent<PlayerJoystick>();
         }
     }
 
     void Update()
     {
-        bool isPaused = (uiManager != null && uiManager.IsPaused());
-        
-        if (isPaused)
-        {
-            rb.velocity = Vector2.zero;
-            isMoving = false;
-            UpdateAnimation();
-            return;
-        }
-
         if (canMove)
         {
             GetInput();
@@ -67,35 +46,20 @@ public class PlayerMovement : MonoBehaviour
 
     void GetInput()
     {
-        if (joystick != null && (Mathf.Abs(joystick.Horizontal) > 0.01f || Mathf.Abs(joystick.Vertical) > 0.01f))
+        Vector2 joystickInput = Vector2.zero;
+        if (playerJoystick != null)
         {
-            rawInput = new Vector2(joystick.Horizontal, joystick.Vertical);
+            joystickInput = playerJoystick.GetJoystickInput();
+        }
+
+        if (joystickInput.magnitude > 0.01f)
+        {
+            rawInput = joystickInput;
         }
         else
         {
             rawInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         }
-    }
-
-    Joystick FindAnyJoystick()
-    {
-        Joystick foundJoystick = null;
-        
-        foundJoystick = FindObjectOfType<DynamicJoystick>();
-        if (foundJoystick != null) return foundJoystick;
-        
-        foundJoystick = FindObjectOfType<FloatingJoystick>();
-        if (foundJoystick != null) return foundJoystick;
-        
-        foundJoystick = FindObjectOfType<VariableJoystick>();
-        if (foundJoystick != null) return foundJoystick;
-        
-        foundJoystick = FindObjectOfType<FixedJoystick>();
-        if (foundJoystick != null) return foundJoystick;
-        
-        foundJoystick = FindObjectOfType<Joystick>();
-        
-        return foundJoystick;
     }
 
     public Vector2 GetProcessedInput()

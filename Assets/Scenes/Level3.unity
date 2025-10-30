@@ -411,6 +411,10 @@ PrefabInstance:
       propertyPath: joystick
       value: 
       objectReference: {fileID: 1909985267}
+    - target: {fileID: 5900150535285691787, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
+      propertyPath: playerJoystick
+      value: 
+      objectReference: {fileID: 187848456}
     - target: {fileID: 6199408283751718340, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.78
@@ -479,6 +483,10 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.adaptiveTilingThreshold
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7451483937675271014, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
+      propertyPath: joystick
+      value: 
+      objectReference: {fileID: 1909985267}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -490,6 +498,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1365323041}
   m_SourcePrefab: {fileID: 100100000, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
+--- !u!114 &187848456 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7451483937675271014, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
+  m_PrefabInstance: {fileID: 187848455}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db988393def73d540a451d13c13465b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &230924699
 GameObject:
   m_ObjectHideFlags: 0

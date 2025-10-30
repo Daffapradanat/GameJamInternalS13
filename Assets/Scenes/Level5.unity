@@ -347,6 +347,10 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.adaptiveTilingThreshold
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7451483937675271014, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
+      propertyPath: joystick
+      value: 
+      objectReference: {fileID: 1052170638}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -13401,6 +13405,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3268148868487371632, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
+      propertyPath: playerJoystick
+      value: 
+      objectReference: {fileID: 1779032300}
+    - target: {fileID: 3268148868487371632, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
+      propertyPath: playerMovement
+      value: 
+      objectReference: {fileID: 1779032304}
+    - target: {fileID: 3268148868487371632, guid: 1905c1adf3fd8e74fa9ea39968864c43, type: 3}
       propertyPath: nextLevelSceneName
       value: Level5
       objectReference: {fileID: 0}
@@ -15178,6 +15190,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6199408283751718340, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
   m_PrefabInstance: {fileID: 187848455}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1779032300 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7451483937675271014, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
+  m_PrefabInstance: {fileID: 187848455}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db988393def73d540a451d13c13465b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1779032304 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5900150535285691787, guid: 69473f146eac52d47a9ee2e17e71cc03, type: 3}
+  m_PrefabInstance: {fileID: 187848455}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdc27eafb3109e9459d1c8c7b9bd8254, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1789582834
 PrefabInstance:
   m_ObjectHideFlags: 0
