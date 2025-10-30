@@ -34,7 +34,6 @@ public class PlayerData : MonoBehaviour
         }
     }
 
-    // Timer waktu hitung mundur
     void Timer()
     {
         if (timer > 0)
@@ -43,14 +42,12 @@ public class PlayerData : MonoBehaviour
             GameManager.Instance.GameOver();
     }
 
-    // fungsi tambah permen
     public void AddCandy(int value)
     {
         candy += value;
         
         if(candy >= goal)
         {
-            // Menang!
             if (GameManager.Instance != null)
                 GameManager.Instance.GameWin();
         }
@@ -72,25 +69,39 @@ public class PlayerData : MonoBehaviour
         }
     }
 
-       private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag(candyTag))
         {
-            int value = 1;
             Candy candyComponent = other.GetComponent<Candy>();
+            
+            if (candyComponent == null)
+            {
+                candyComponent = other.GetComponentInChildren<Candy>();
+            }
+            
+            if (candyComponent == null)
+            {
+                candyComponent = other.GetComponentInParent<Candy>();
+            }
+            
             if (candyComponent != null)
             {
-                value = candyComponent.candyValue;
+                int value = candyComponent.candyValue;
+                AddCandy(value);
+                candyComponent.OnCollected();
             }
-
-            AddCandy(value);
-
-            if (AudioManager.Instance != null)
+            else
             {
-                AudioManager.Instance.PlayCollectCandy();
+                AddCandy(1);
+                
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlayCollectCandy();
+                }
+                
+                Destroy(other.transform.root.gameObject);
             }
-
-            Destroy(other.gameObject);
         }
     }
 }

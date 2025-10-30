@@ -11,12 +11,16 @@ public class UiManager : MonoBehaviour
     public GameObject losePanel;
     [Tooltip("Panel yang muncul saat menang")]
     public GameObject winPanel;
+    [Tooltip("Panel yang muncul saat pause")]
+    public GameObject pausePanel;
 
     [Header("Scene Names")]
     [Tooltip("Nama scene main menu")]
     public string mainMenuSceneName = "MainMenu";
     [Tooltip("Nama scene level berikutnya (untuk continue)")]
     public string nextLevelSceneName = "Level2";
+
+    private bool isPaused = false;
 
     private void Start()
     {
@@ -25,9 +29,22 @@ public class UiManager : MonoBehaviour
 
         if (winPanel != null)
             winPanel.SetActive(false);
+
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
     }
 
-    // === SHOW PANELS ===
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPaused)
+                ResumeGame();
+            else
+                PauseGame();
+        }
+    }
+
     public void ShowLosePanel()
     {
         if (losePanel != null)
@@ -40,19 +57,49 @@ public class UiManager : MonoBehaviour
             winPanel.SetActive(true);
     }
 
-    // Restart current level
+    public void PauseGame()
+    {
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(true);
+            Time.timeScale = 0f;
+            isPaused = true;
+            PlayButtonSound();
+        }
+    }
+
+    public void ResumeGame()
+    {
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(false);
+            Time.timeScale = 1f;
+            isPaused = false;
+            PlayButtonSound();
+        }
+    }
+
+    public void TogglePause()
+    {
+        if (isPaused)
+            ResumeGame();
+        else
+            PauseGame();
+    }
+
     public void RestartLevel()
     {
         PlayButtonSound();
         Time.timeScale = 1f;
+        isPaused = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    // Continue ke level berikutnya
     public void ContinueToNextLevel()
     {
         PlayButtonSound();
         Time.timeScale = 1f;
+        isPaused = false;
         
         if (!string.IsNullOrEmpty(nextLevelSceneName))
         {
@@ -60,7 +107,6 @@ public class UiManager : MonoBehaviour
         }
         else
         {
-            // Load level selanjutnya berdasarkan build index
             int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
             
             if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
@@ -69,18 +115,17 @@ public class UiManager : MonoBehaviour
             }
             else
             {
-                // Kalau udah level terakhir, balik ke main menu
-                Debug.Log("No more levels! Going back to main menu.");
+                //Debug.Log("No more levels! Going back to main menu.");
                 BackToMainMenu();
             }
         }
     }
 
-    // Back to main menu
     public void BackToMainMenu()
     {
         PlayButtonSound();
         Time.timeScale = 1f;
+        isPaused = false;
         
         if (!string.IsNullOrEmpty(mainMenuSceneName))
         {
@@ -92,7 +137,6 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    // === AUDIO ===
     private void PlayButtonSound()
     {
         if (AudioManager.Instance != null)
@@ -101,7 +145,6 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    // === PUBLIC METHODS untuk dipanggil dari GameManager ===
     public void OnGameOver()
     {
         ShowLosePanel();
@@ -110,5 +153,10 @@ public class UiManager : MonoBehaviour
     public void OnGameWin()
     {
         ShowWinPanel();
+    }
+
+    public bool IsPaused()
+    {
+        return isPaused;
     }
 }

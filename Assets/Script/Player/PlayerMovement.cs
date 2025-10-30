@@ -6,101 +6,134 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
     [Tooltip("Speed player bergerak")]
-    public float speed;
+    public float speed = 5f;
     [Tooltip("Apakah player bisa bergerak?")]
     public bool canMove = true;
 
-    [Space]
     [Header("References")]
     [Tooltip("Rigidbody player")]
     public Rigidbody2D rb;
     [Tooltip("Animator player")]
     public Animator anim;
-
-    bool isMoving;
-    int direction = 0;
     
-    // ===== TAMBAHAN UNTUK CONTROL LIE =====
-    [HideInInspector]
-    public Vector2 inputModifier = Vector2.one; // Multiplier untuk input (untuk invert, dll)
-    [HideInInspector]
-    public bool useCustomInput = false; // Flag apakah pakai custom input
-    [HideInInspector]
-    public Vector2 customInput = Vector2.zero; // Custom input dari ControlLie
+    [Header("Joystick")]
+    [Tooltip("Base Joystick - otomatis detect semua tipe")]
+    public Joystick joystick;
+
+    private bool isMoving;
+    private int direction = 0;
+    
+    private Vector2 rawInput = Vector2.zero;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        
+        if (joystick == null)
+        {
+            joystick = FindAnyJoystick();
+        }
     }
 
     void Update()
     {
         if (canMove)
+        {
+            GetInput();
             Move();
+        }
+        
+        UpdateAnimation();
+    }
 
-        Detail();
+    void GetInput()
+    {
+        if (joystick != null && (Mathf.Abs(joystick.Horizontal) > 0.01f || Mathf.Abs(joystick.Vertical) > 0.01f))
+        {
+            rawInput = new Vector2(joystick.Horizontal, joystick.Vertical);
+        }
+        else
+        {
+            rawInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        }
+    }
+
+    Joystick FindAnyJoystick()
+    {
+        Joystick foundJoystick = null;
+        
+        foundJoystick = FindObjectOfType<DynamicJoystick>();
+        if (foundJoystick != null) return foundJoystick;
+        
+        foundJoystick = FindObjectOfType<FloatingJoystick>();
+        if (foundJoystick != null) return foundJoystick;
+        
+        foundJoystick = FindObjectOfType<VariableJoystick>();
+        if (foundJoystick != null) return foundJoystick;
+        
+        foundJoystick = FindObjectOfType<FixedJoystick>();
+        if (foundJoystick != null) return foundJoystick;
+        
+        foundJoystick = FindObjectOfType<Joystick>();
+        
+        return foundJoystick;
+    }
+
+    public Vector2 GetProcessedInput()
+    {
+        return rawInput;
+    }
+
+    public void SetCustomInput(Vector2 input)
+    {
+        rawInput = input;
     }
 
     void Move()
     {
-        float horizontal;
-        float vertical;
+        Vector2 processedInput = rawInput;
         
-        // ===== CEK APAKAH ADA CUSTOM INPUT =====
-        if (useCustomInput)
+        if (processedInput.magnitude > 0.1f)
         {
-            horizontal = customInput.x;
-            vertical = customInput.y;
-        }
-        else
-        {
-            horizontal = Input.GetAxis("Horizontal") * inputModifier.x;
-            vertical = Input.GetAxis("Vertical") * inputModifier.y;
-        }
-        
-        if (horizontal != 0 || vertical != 0)
-        {
-            rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
-            rb.velocity = new Vector2(rb.velocity.x, vertical * speed);
+            rb.velocity = new Vector2(processedInput.x * speed, processedInput.y * speed);
             isMoving = true;
             
-            if(horizontal > 0)
-                direction = 1;
-            else if (horizontal < 0)
-                direction = 3;
-            else if (vertical > 0)
-                direction = 0;
-            else if (vertical < 0)
-                direction = 2;
+            UpdateDirection(processedInput);
         }
         else
         {
-            isMoving = false;
             rb.velocity = Vector2.zero;
+            isMoving = false;
         }
     }
 
-    void Detail()
+    void UpdateDirection(Vector2 input)
     {
-        if (isMoving)
+        if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
         {
-            if (anim != null)
-            {
-                anim.SetBool("isWalking", true);    
-                anim.SetInteger("direction", direction);
-            }
-            
-            // Play footstep (akan auto-handle jika masih playing)
-            PlayFootstep();
-        } 
+            direction = (input.x > 0) ? 1 : 3;
+        }
         else
         {
-            if(anim != null)
-                anim.SetBool("isWalking", false);
-            
-            // Stop footstep saat berhenti
-            StopFootstep();
+            direction = (input.y > 0) ? 0 : 2;
         }
+    }
+
+    void UpdateAnimation()
+    {
+        if (anim != null)
+        {
+            anim.SetBool("isWalking", isMoving);
+            if (isMoving)
+            {
+                anim.SetInteger("direction", direction);
+            }
+        }
+        
+        if (isMoving)
+            PlayFootstep();
+        else
+            StopFootstep();
     }
 
     void PlayFootstep()
