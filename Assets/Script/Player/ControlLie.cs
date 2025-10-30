@@ -8,45 +8,39 @@ public class ControlLie : MonoBehaviour
     [Tooltip("Waktu dalam detik sebelum control mulai berubah jika tidak mengambil candy")]
     public float timeBeforeChaos = 10f;
     
-    [Tooltip("Apakah control saat ini dalam mode chaos?")]
-    public bool isControlChaos = false;
-    
     [Header("Chaos Types")]
     [Tooltip("Inversi kontrol (atas jadi bawah, kiri jadi kanan)")]
     public bool canInvertControls = true;
-    
     [Tooltip("Random direction saat menekan tombol")]
     public bool canRandomDirection = true;
-    
-    [Tooltip("Kontrol berputar 90 derajat (atas jadi kanan, kanan jadi bawah, dll)")]
+    [Tooltip("Kontrol berputar 90 derajat")]
     public bool canRotateControls = true;
-    
     [Tooltip("Kontrol delay (input tertunda)")]
     public bool canDelayInput = true;
     
     [Header("Visual Feedback")]
     [Tooltip("UI teks untuk warning chaos")]
     public TMPro.TextMeshProUGUI warningUI;
-    
     [Tooltip("Warna teks warning")]
     public Color warningColor = Color.red;
     
     [Header("References")]
     [Tooltip("Reference ke PlayerMovement")]
     public PlayerMovement playerMovement;
-    
     [Tooltip("Reference ke PlayerData")]
     public PlayerData playerData;
     
+    private bool isControlChaos = false;
     private float chaosTimer;
     private float lastCandyCount;
-    private int currentChaosType = 0; 
+    private int currentChaosType = 0;
+    
     private Queue<Vector2> delayedInputs = new Queue<Vector2>();
     private float inputDelayTimer = 0f;
-    private float inputDelayAmount = 0.5f;
+    private const float inputDelayAmount = 0.5f;
     private Vector2 lastRandomDirection = Vector2.zero;
-    private float randomDirectionChangeTime = 0.3f;
     private float randomDirectionTimer = 0f;
+    private const float randomDirectionChangeTime = 0.3f;
     
     private Color originalWarningColor;
     private bool isInitialized = false;
@@ -55,12 +49,10 @@ public class ControlLie : MonoBehaviour
     {
         if (playerMovement == null)
             playerMovement = GetComponent<PlayerMovement>();
-        
         if (playerData == null)
             playerData = GetComponent<PlayerData>();
         
         chaosTimer = timeBeforeChaos;
-        
         if (playerData != null)
             lastCandyCount = playerData.candy;
         
@@ -82,9 +74,7 @@ public class ControlLie : MonoBehaviour
     void Update()
     {
         if (!isInitialized) return;
-        
-        if (GameManager.Instance != null && GameManager.Instance.isGameOver)
-            return;
+        if (GameManager.Instance != null && GameManager.Instance.isGameOver) return;
         
         CheckCandyCollection();
         UpdateChaosTimer();
@@ -94,36 +84,16 @@ public class ControlLie : MonoBehaviour
         {
             ApplyChaosControl();
         }
-        else
-        {
-            if (playerMovement != null)
-            {
-                playerMovement.useCustomInput = false;
-                playerMovement.inputModifier = Vector2.one;
-            }
-        }
     }
 
     void CheckCandyCollection()
     {
         if (playerData == null) return;
         
-        // Jika candy bertambah, reset timer
         if (playerData.candy > lastCandyCount)
         {
-            chaosTimer = timeBeforeChaos;
-            isControlChaos = false;
+            ResetToNormal();
             lastCandyCount = playerData.candy;
-            
-            // Reset ke kontrol normal
-            currentChaosType = 0;
-            delayedInputs.Clear();
-            
-            if (playerMovement != null)
-            {
-                playerMovement.useCustomInput = false;
-                playerMovement.inputModifier = Vector2.one;
-            }
         }
     }
 
@@ -144,7 +114,6 @@ public class ControlLie : MonoBehaviour
         isControlChaos = true;
         
         List<int> availableChaos = new List<int>();
-        
         if (canInvertControls) availableChaos.Add(1);
         if (canRandomDirection) availableChaos.Add(2);
         if (canRotateControls) availableChaos.Add(3);
@@ -160,56 +129,40 @@ public class ControlLie : MonoBehaviour
     {
         if (playerMovement == null) return;
         
-        // Baca input original
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        Vector2 originalInput = playerMovement.GetProcessedInput();
         
-        Vector2 originalInput = new Vector2(horizontal, vertical);
+        if (originalInput.magnitude < 0.01f)
+        {
+            playerMovement.SetCustomInput(Vector2.zero);
+            return;
+        }
+        
         Vector2 modifiedInput = Vector2.zero;
         
         switch (currentChaosType)
         {
             case 1: // Inverted
-                playerMovement.useCustomInput = false;
-                playerMovement.inputModifier = new Vector2(-1, -1);
+                modifiedInput = -originalInput;
                 break;
                 
             case 2: // Random Direction
-                if (horizontal != 0 || vertical != 0)
-                {
-                    modifiedInput = GetRandomDirection(originalInput);
-                    playerMovement.useCustomInput = true;
-                    playerMovement.customInput = modifiedInput;
-                }
-                else
-                {
-                    playerMovement.useCustomInput = false;
-                }
+                modifiedInput = GetRandomDirection(originalInput);
                 break;
                 
-            case 3: // Rotated 90 degrees (Up->Right, Right->Down, etc)
-                playerMovement.useCustomInput = true;
-                playerMovement.customInput = new Vector2(-vertical, horizontal);
+            case 3: // Rotated 90 degrees
+                modifiedInput = new Vector2(-originalInput.y, originalInput.x);
                 break;
                 
             case 4: // Delayed
-                if (horizontal != 0 || vertical != 0)
-                {
-                    modifiedInput = GetDelayedInput(originalInput);
-                    playerMovement.useCustomInput = true;
-                    playerMovement.customInput = modifiedInput;
-                }
-                else
-                {
-                    playerMovement.useCustomInput = false;
-                }
+                modifiedInput = GetDelayedInput(originalInput);
                 break;
                 
             default:
-                playerMovement.useCustomInput = false;
-                playerMovement.inputModifier = Vector2.one;
+                modifiedInput = originalInput;
                 break;
         }
+        
+        playerMovement.SetCustomInput(modifiedInput);
     }
 
     Vector2 GetRandomDirection(Vector2 currentInput)
@@ -230,7 +183,7 @@ public class ControlLie : MonoBehaviour
             }
         }
         
-        return lastRandomDirection;
+        return lastRandomDirection.normalized * currentInput.magnitude;
     }
 
     Vector2 GetDelayedInput(Vector2 currentInput)
@@ -285,27 +238,23 @@ public class ControlLie : MonoBehaviour
         }
     }
 
-    public void ForceActivateChaos(int chaosType = -1)
-    {
-        if (chaosType >= 0 && chaosType <= 4)
-            currentChaosType = chaosType;
-        else
-            ActivateChaos();
-        
-        isControlChaos = true;
-    }
-
     public void ResetToNormal()
     {
         isControlChaos = false;
         currentChaosType = 0;
         chaosTimer = timeBeforeChaos;
         delayedInputs.Clear();
+        lastRandomDirection = Vector2.zero;
+        randomDirectionTimer = 0f;
+    }
+
+    public void ForceActivateChaos(int chaosType = -1)
+    {
+        if (chaosType >= 1 && chaosType <= 4)
+            currentChaosType = chaosType;
+        else
+            ActivateChaos();
         
-        if (playerMovement != null)
-        {
-            playerMovement.useCustomInput = false;
-            playerMovement.inputModifier = Vector2.one;
-        }
+        isControlChaos = true;
     }
 }
