@@ -27,14 +27,11 @@ public class Candy : MonoBehaviour
 
     private Vector3 startPosition;
     private float randomOffset;
-    private Transform rootTransform;
 
     void Start()
     {
         startPosition = transform.position;
         randomOffset = Random.Range(0f, 2f * Mathf.PI);
-        
-        rootTransform = transform.root;
     }
 
     void Update()
@@ -58,6 +55,6 @@ public class Candy : MonoBehaviour
             AudioManager.Instance.PlayCollectCandy();
         }
 
-        Destroy(rootTransform.gameObject);
+        Destroy(gameObject);
     }
 }

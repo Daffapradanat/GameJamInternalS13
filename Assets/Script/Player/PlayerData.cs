@@ -75,16 +75,6 @@ public class PlayerData : MonoBehaviour
         {
             Candy candyComponent = other.GetComponent<Candy>();
             
-            if (candyComponent == null)
-            {
-                candyComponent = other.GetComponentInChildren<Candy>();
-            }
-            
-            if (candyComponent == null)
-            {
-                candyComponent = other.GetComponentInParent<Candy>();
-            }
-            
             if (candyComponent != null)
             {
                 int value = candyComponent.candyValue;
@@ -100,7 +90,7 @@ public class PlayerData : MonoBehaviour
                     AudioManager.Instance.PlayCollectCandy();
                 }
                 
-                Destroy(other.transform.root.gameObject);
+                Destroy(other.gameObject);
             }
         }
     }
